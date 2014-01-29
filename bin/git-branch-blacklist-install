@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Copyright (C) 2014, Steve Milner
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+PRE_RECEIVE_HOOK_FILE=""
+
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 /PATH/TO/GIT/REPO"
+fi
+
+# Move to the directory
+pushd $1 &> /dev/null
+if [ $? -ne 0 ]; then
+    echo "Path does not exist. Exiting"
+    exit -1
+fi
+
+# Test to make sure it's a git repo and we are in the top level
+TOP_LEVEL=`git rev-parse --show-toplevel`
+if [ $? -ne 0 ]; then
+    echo "Path does not seem to be a git repository. Exiting."
+    exit -2
+fi
+pushd $TOP_LEVEL &> /dev/null
+
+
+# Check for a pre-existing pre-receive hook
+IS_BARE=`git config --get core.bare`
+if [ $? -ne 0 ]; then
+    echo "Repository does not define if it is bare or not. Exiting."
+    exit -3
+fi
+
+
+HOOK_LOCATION=".git/hooks/pre-receive"
+if [ $IS_BARE == "true" ]; then
+    HOOK_LOCATION="hooks/pre-receive"
+fi
+
+ls $HOOK_LOCATION &> /dev/null
+if [ $? -eq 0 ]; then
+    echo "$HOOK_LOCATION already exists. Exiting."
+    exit -4
+fi
+
+cp $PRE_RECEIVE_HOOK_FILE $HOOK_LOCATION
+chmod a+x $HOOK_LOCATION
+echo "The hook has been installed at $HOOK_LOCATION"
+echo "Updating the configuration ..."
+git config --add branch-blacklist.initialize branch_names_are_values
+git config --unset branch-blacklist.initialize
+echo "Done"

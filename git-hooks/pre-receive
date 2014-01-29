@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Copyright (C) 2014, Steve Milner
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Get the blacklist from the configuration file
+BLACKLIST=`git config --get-regex branch-blacklist.* | cut -d " " -f 2`
+
+# For each input to the hook ..
+while read LINE
+do
+    # Record the branch ..
+    BRANCH=`echo $LINE | cut -d " " -f 3 | cut -d / -f 3`
+    # And check it against each item in the blacklist
+    for BL in $BLACKLIST; do
+        # If it is a blacklisted branch ...
+        if [ $BL == $BRANCH ]; then
+            # reject it
+            echo "BRANCH-BLACKLIST: Rejecting $BRANCH as it is in the branch blacklist."
+            exit -1
+        fi
+    done
+done
+# Anything not in the blacklist is allowed through
+exit 0

@@ -1,0 +1,89 @@
+#!/bin/bash
+#
+# Copyright (C) 2014, Steve Milner
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+usage() {
+    echo "$0 [add <BRANCH_NAME>] [remove <BRANCH_NAME>] [list]";
+    exit 1;
+}
+
+if [ $# -lt 1 ]; then
+    usage
+fi
+
+
+check_result() {
+    if [ $? -ne 0 ]; then
+        echo "Error: Non-zero exit code returned from server. Unable to continue."
+        echo "exiting ..."
+        exit -1;
+    fi
+}
+
+
+# Set up params we must have
+URL=`git config --get remote.origin.url`
+SSH_HOST=`echo $URL | cut -d ":" -f 1`
+SSH_PATH=`echo $URL | cut -d ":" -f 2`
+
+# Verify the params look like they should
+if [[ $SSH_HOST != *@* ]]; then
+    echo "Error: $SSH_HOST does not look like a valid user@host combo."
+    echo "$0 requires the use of the ssh transport. Full URL found was $URL."
+    echo "exiting ..."
+    exit -2
+fi
+
+
+# Check that the SSH_PATH is a full path else handle it the best we can
+if [[ $SSH_PATH != /* ]]; then
+    SSH_PATH_PREFIX=`git config --get branch-blacklist-config.path-prefix`
+    if [ $? -ne 0 ]; then
+        echo "Error: The SSH path is relative and branch-blacklist-config.path-prefix is not set."
+        echo "Please set branch-blacklist-config.path-prefix like so:"
+        echo
+        echo "    git config --add branch-blacklist-config.path-prefix \"/path/to/repo/area/\""
+        echo
+    else
+        SSH_PATH=$SSH_PATH_PREFIX$SSH_PATH
+    fi
+fi
+
+
+case "$1" in
+        list)
+            echo "cd $SSH_PATH && git config --get-regex branch-blacklist.* | cut -d ' ' -f 2" | ssh $SSH_HOST "/bin/bash -s"
+            check_result
+            ;;
+        add)
+            if [ $# -ne 2 ]; then
+                usage
+            fi
+            echo "cd $SSH_PATH && git config --add branch-blacklist.bl \"$2\"" | ssh $SSH_HOST "/bin/bash -s"
+            check_result
+            ;;
+        remove)
+            if [ $# -ne 2 ]; then
+                usage
+            fi
+            echo "cd $SSH_PATH && git config --unset-all branch-blacklist.bl \"$2\"" | ssh $SSH_HOST "/bin/bash -s"
+            check_result
+            ;;
+        *)
+            usage
+            ;;
+esac

@@ -40,14 +40,6 @@ URL=`git config --get remote.origin.url`
 SSH_HOST=`echo $URL | cut -d ":" -f 1`
 SSH_PATH=`echo $URL | cut -d ":" -f 2`
 
-# Verify the params look like they should
-if [[ $SSH_HOST != *@* ]]; then
-    echo "Error: $SSH_HOST does not look like a valid user@host combo."
-    echo "$0 requires the use of the ssh transport. Full URL found was $URL."
-    echo "exiting ..."
-    exit -2
-fi
-
 
 # Check that the SSH_PATH is a full path else handle it the best we can
 if [[ $SSH_PATH != /* ]]; then

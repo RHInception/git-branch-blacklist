@@ -77,10 +77,9 @@ Example:
 ```
 $ git-branch-blacklist-install /full/path/to/repo/
 The hook has been installed at .git/hooks/pre-receive
-Updating the configuration ...
 Done
 $ 
 ```
 
 ### Configuration
-Server side configuration requires a section named branch-blacklist. This will be automatically created if you use the git-branch-blacklist-install tool. It stores a list of blacklisted branches.
+Server side configuration requires a section named branch-blacklist. This will be automatically created upon the first blacklisted branch addition. It stores a list of blacklisted branches.

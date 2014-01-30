@@ -60,7 +60,4 @@ fi
 cp $PRE_RECEIVE_HOOK_FILE $HOOK_LOCATION
 chmod a+x $HOOK_LOCATION
 echo "The hook has been installed at $HOOK_LOCATION"
-echo "Updating the configuration ..."
-git config --add branch-blacklist.initialize branch_names_are_values
-git config --unset branch-blacklist.initialize
 echo "Done"

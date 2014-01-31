@@ -8,11 +8,12 @@ RPMSPEC := $(RPMSPECDIR)/$(NAME).spec
 
 
 clean:
-	rm -f $(ARCHIVE)
+	rm -rf dist/
 	rm -rf rpm-build/
 
-sdist:
-	tar --transform "s|git-branch-blacklist/|$(NAME)-$(VERSION)/|" --exclude $(ARCHIVE) --directory ../  --exclude-vcs -czf $(ARCHIVE) $(NAME)
+sdist: clean
+	mkdir dist/
+	tar --transform "s|git-branch-blacklist/|$(NAME)-$(VERSION)/|" --exclude dist/* --directory ../  --exclude-vcs -czf dist/$(ARCHIVE) $(NAME)
 
 
 install:
@@ -21,7 +22,7 @@ install:
 
 rpmcommon: sdist
 	@mkdir -p rpm-build
-	@cp *.gz rpm-build/
+	@cp dist/*.gz rpm-build/
 
 srpm5: rpmcommon
 	rpmbuild --define "_topdir %(pwd)/rpm-build" \

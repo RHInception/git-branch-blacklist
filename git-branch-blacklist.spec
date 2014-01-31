@@ -4,6 +4,7 @@
 Name:           git-branch-blacklist
 Version:        %{CODE_VERSION}
 Release:        1%{?dist}
+Group:          Development/Tools
 Summary:        Git branch blacklisting tools
 
 License:        GPLv3+
@@ -32,6 +33,7 @@ PREFIX=$RPM_BUILD_ROOT %make_install
 
 
 %files
+%defattr(-, root, root, -)
 %doc README.md
 %{_bindir}/git-branch-blacklist
 %{_bindir}/git-branch-blacklist-install

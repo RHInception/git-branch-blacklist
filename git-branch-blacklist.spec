@@ -22,7 +22,7 @@ Git branch blacklisting tools for use over the SSH transport.
 
 
 %build
-make
+%{__sed} -i "s|PRE_RECEIVE_HOOK_FILE=\"\"|PRE_RECEIVE_HOOK_FILE=\"%{_datarootdir}/%{name}/git-hooks/pre-receive\"|" bin/%{name}-install
 
 
 %install

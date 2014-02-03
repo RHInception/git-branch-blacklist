@@ -58,21 +58,21 @@ fi
 
 case "$1" in
         list)
-            echo "cd $SSH_PATH && git config --get-regex branch-blacklist.* | cut -d ' ' -f 2" | ssh $SSH_HOST "/bin/bash -s"
+            echo "cd \"$SSH_PATH\" && git config --get-regex branch-blacklist.* | cut -d ' ' -f 2" | ssh "$SSH_HOST" "/bin/bash -s"
             check_result
             ;;
         add)
             if [ $# -ne 2 ]; then
                 usage
             fi
-            echo "cd $SSH_PATH && git config --add branch-blacklist.bl \"$2\"" | ssh $SSH_HOST "/bin/bash -s"
+            echo "cd \"$SSH_PATH\" && git config --add branch-blacklist.bl \"$2\"" | ssh "$SSH_HOST" "/bin/bash -s"
             check_result
             ;;
         remove)
             if [ $# -ne 2 ]; then
                 usage
             fi
-            echo "cd $SSH_PATH && git config --unset-all branch-blacklist.bl \"$2\"" | ssh $SSH_HOST "/bin/bash -s"
+            echo "cd \"$SSH_PATH\" && git config --unset-all branch-blacklist.bl \"$2\"" | ssh "$SSH_HOST" "/bin/bash -s"
             check_result
             ;;
         *)

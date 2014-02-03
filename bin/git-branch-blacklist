@@ -42,7 +42,7 @@ SSH_PATH="`echo $URL | cut -d ":" -f 2`"
 
 
 # Check that the SSH_PATH is a full path else handle it the best we can
-if [[ $SSH_PATH != /* ]]; then
+if [[ "$SSH_PATH" != /* ]]; then
     SSH_PATH_PREFIX="`git config --get branch-blacklist-config.path-prefix`"
     if [ $? -ne 0 ]; then
         echo "Error: The SSH path is relative and branch-blacklist-config.path-prefix is not set."
@@ -51,7 +51,7 @@ if [[ $SSH_PATH != /* ]]; then
         echo "    git config --add branch-blacklist-config.path-prefix \"/path/to/repo/area/\""
         echo
     else
-        SSH_PATH=$SSH_PATH_PREFIX$SSH_PATH
+        SSH_PATH="$SSH_PATH_PREFIX$SSH_PATH"
     fi
 fi
 

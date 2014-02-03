@@ -24,7 +24,7 @@ if [ $# -ne 1 ]; then
 fi
 
 # Move to the directory
-pushd $1 &> /dev/null
+pushd "$1" &> /dev/null
 if [ $? -ne 0 ]; then
     echo "Path does not exist. Exiting"
     exit -2
@@ -36,7 +36,7 @@ if [ $? -ne 0 ]; then
     echo "Path does not seem to be a git repository. Exiting."
     exit -3
 fi
-pushd $TOP_LEVEL &> /dev/null
+pushd "$TOP_LEVEL" &> /dev/null
 
 
 # Check for a pre-existing pre-receive hook
@@ -48,17 +48,17 @@ fi
 
 
 HOOK_LOCATION=".git/hooks/pre-receive"
-if [ $IS_BARE == "true" ]; then
+if [ "$IS_BARE" == "true" ]; then
     HOOK_LOCATION="hooks/pre-receive"
 fi
 
-ls $HOOK_LOCATION &> /dev/null
+ls "$HOOK_LOCATION" &> /dev/null
 if [ $? -eq 0 ]; then
     echo "$HOOK_LOCATION already exists. Exiting."
     exit -5
 fi
 
-cp $PRE_RECEIVE_HOOK_FILE $HOOK_LOCATION
-chmod a+x $HOOK_LOCATION
+cp "$PRE_RECEIVE_HOOK_FILE" "$HOOK_LOCATION"
+chmod a+x "$HOOK_LOCATION"
 echo "The hook has been installed at $HOOK_LOCATION"
 echo "Done"

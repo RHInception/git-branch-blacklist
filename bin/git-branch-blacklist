@@ -36,14 +36,14 @@ check_result() {
 
 
 # Set up params we must have
-URL=`git config --get remote.origin.url`
-SSH_HOST=`echo $URL | cut -d ":" -f 1`
-SSH_PATH=`echo $URL | cut -d ":" -f 2`
+URL="`git config --get remote.origin.url`"
+SSH_HOST="`echo $URL | cut -d ":" -f 1`"
+SSH_PATH="`echo $URL | cut -d ":" -f 2`"
 
 
 # Check that the SSH_PATH is a full path else handle it the best we can
 if [[ $SSH_PATH != /* ]]; then
-    SSH_PATH_PREFIX=`git config --get branch-blacklist-config.path-prefix`
+    SSH_PATH_PREFIX="`git config --get branch-blacklist-config.path-prefix`"
     if [ $? -ne 0 ]; then
         echo "Error: The SSH path is relative and branch-blacklist-config.path-prefix is not set."
         echo "Please set branch-blacklist-config.path-prefix like so:"

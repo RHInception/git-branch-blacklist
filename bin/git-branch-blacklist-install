@@ -31,7 +31,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Test to make sure it's a git repo and we are in the top level
-TOP_LEVEL=`git rev-parse --show-toplevel`
+TOP_LEVEL="`git rev-parse --show-toplevel`"
 if [ $? -ne 0 ]; then
     echo "Path does not seem to be a git repository. Exiting."
     exit -3
@@ -40,7 +40,7 @@ pushd $TOP_LEVEL &> /dev/null
 
 
 # Check for a pre-existing pre-receive hook
-IS_BARE=`git config --get core.bare`
+IS_BARE="`git config --get core.bare`"
 if [ $? -ne 0 ]; then
     echo "Repository does not define if it is bare or not. Exiting."
     exit -4

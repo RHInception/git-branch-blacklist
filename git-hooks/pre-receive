@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Get the blacklist from the configuration file
-BLACKLIST=`git config --get-regex branch-blacklist.* | cut -d " " -f 2`
+BLACKLIST=`git config --get-regexp branch-blacklist.* | cut -d " " -f 2`
 
 # For each input to the hook ..
 while read LINE

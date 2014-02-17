@@ -58,7 +58,7 @@ fi
 
 case "$1" in
         list)
-            echo "cd \"$SSH_PATH\" && git config --get-regex branch-blacklist.* | cut -d ' ' -f 2" | ssh "$SSH_HOST" "/bin/bash -s"
+            echo "cd \"$SSH_PATH\" && git config --get-regexp branch-blacklist.* | cut -d ' ' -f 2" | ssh "$SSH_HOST" "/bin/bash -s"
             check_result
             ;;
         add)
